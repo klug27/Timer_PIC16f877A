@@ -1,6 +1,6 @@
 /*
- * File:   hw_desc_tiimer0.c
- * Author: VOUFO ASTRI
+ * File:   hw_desc_timer0.c
+ * Author: VOUFO BOGNING ULRICH ASTRI
  *
  * Created on 26 mai 2023, 14:45
  */
