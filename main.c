@@ -1,6 +1,6 @@
 /*
  * File:   main.c
- * Author: al2nt
+ * Author: ASTRI VOUFO
  *
  * Created on May 26, 2023, 1:49 PM
  */
