@@ -1,15 +1,10 @@
-/* 
- * File:   hw_desc_timer0.h
- * Author: VOUFO BOGNING ULRICH ASTRI
- *
- * Created on 26 mai 2023, 14:46
- */
+
 
 #ifndef HW_DESC_TIMER_H
 #define	HW_DESC_TIMER_H
 
 /******************************************************************************
-* @file		hw_desc_timer0.h
+* @file		hw_desc_timer.h
 * @author	VOUFO ASTRI
 * @date		26.05.2023
 *******************************************************************************/
@@ -38,16 +33,6 @@ typedef void (*cbkFunc_t)(void); // Callback function
  *                                                                           *                                     
  *****************************************************************************/
 
-/** timer ID */
-typedef enum eTimerID_tTag
-{
-    TIMER_ID0 = 0,   /**< id for timer0 */
-    TIMER_ID1 = 1,   /**< id for timer1 */
-    TIMER_ID2 = 2,   /**< id for timer2 */
-            
-    TIMER_ID_MAX
-} eTimerID_t;
-
 
  /****************************************************************************
  *                                                                           *                                     
@@ -67,22 +52,30 @@ typedef enum eTimerID_tTag
 
   * @return true if timer was successfully initialized, false otherwise
  **/
-bool bTimerInit(eTimerID_t eTimerNumber);
+bool bTimerInit(void);
 
 
 /** @brief this function allow to insert callback function in the memory
-  * @param [IN]  Function     : pointer to data     
+  * @param [IN]  Function     : callback function      
   * @param [IN]  u32PeriodMs  : function is called during these period    
   * @return true if the function was successfully registered, false otherwise
  **/
-bool bTimer0InsertCallback(cbkFunc_t Function, uint32_t u32PeriodMs);
+bool bTimerRegCallback(cbkFunc_t Function, uint32_t u32PeriodMs);
+
+
+/** @brief this function allow to release callback function to the memory
+  * @param [IN]  Function     : callback function     
+  * @param [IN]  u32PeriodMs  : function is called during these period    
+  * @return true if the function was successfully registered, false otherwise
+ **/
+bool bTimerUnregCallback(cbkFunc_t Function, uint32_t u32PeriodMs);
 
 
 /** @brief this function is use for delay
   * @param [IN]  u32Delay     : delay (millisecond)    
   * @return none
  **/
-void vTimer0DelayMs(uint32_t u32Delay);
+void vTimerDelayMs(uint32_t u32Delay);
 
 #endif	
 

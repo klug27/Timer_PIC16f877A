@@ -1,18 +1,11 @@
-/*
- * File:   hw_desc_tiimer0.c
- * Author: VOUFO ASTRI
- *
- * Created on 26 mai 2023, 14:45
- */
-
 
 #include <stdbool.h>
 #include <xc.h>
 #include "hw_desc_timer.h"
 
 /******************************************************************************
-* @file		hw_desc_timer0.c
-* @author	VOUFO BOGNING ULRICH ASTRI
+* @file		hw_desc_timer.c
+* @author	VOUFO ASTRI
 * @date		26.05.2023
 *******************************************************************************/
 
@@ -69,11 +62,6 @@
  *                                                                           *                                     
  *****************************************************************************/
 
-/** @brief this function enable timer 0 
-  * 
-  * @return true if timer was successfully initialized, false otherwise
- **/
-static bool bTimer0Init(void);
 
  /****************************************************************************
  *                                                                           *                                     
@@ -113,16 +101,9 @@ typedef struct sTimerCtrlBlock_tTag
  *****************************************************************************/
 
 /** Callback data  */
-static volatile sTimerCtrlBlock_t sTimerCtrl[TIMER_ID_MAX] = 
-{
-    {.Function    = NULLPTR, .u32PeriodMs = TIMER_ZERO, .u32TickMs = TIMER_ZERO, 
-     .u32NextTime = TIMER_ZERO, .eState   = TIMER_DRIVER_UNINITIALIZED},
-     
-    {.Function    = NULLPTR, .u32PeriodMs = TIMER_ZERO, .u32TickMs = TIMER_ZERO,
-     .u32NextTime = TIMER_ZERO, .eState   = TIMER_DRIVER_UNINITIALIZED},
-     
-    {.Function    = NULLPTR, .u32PeriodMs = TIMER_ZERO, .u32TickMs = TIMER_ZERO,
-     .u32NextTime = TIMER_ZERO, .eState   = TIMER_DRIVER_UNINITIALIZED}
+static volatile sTimerCtrlBlock_t sTimerCtrl = 
+{.Function    = NULLPTR, .u32PeriodMs = TIMER_ZERO, .u32TickMs = TIMER_ZERO, 
+     .u32NextTime = TIMER_ZERO, .eState   = TIMER_DRIVER_UNINITIALIZED
 };
 
  /****************************************************************************
@@ -131,12 +112,19 @@ static volatile sTimerCtrlBlock_t sTimerCtrl[TIMER_ID_MAX] =
  *                                                                           *                                     
  *****************************************************************************/
 
-static bool bTimer0Init(void)
+
+ /****************************************************************************
+ *                                                                           *                                     
+ *  P U B L I C  F U N C T I O N  I M P L E M E N T A T I O N                *                                     
+ *                                                                           *                                     
+ *****************************************************************************/
+
+bool bTimerInit(void)
 {
-    if (TIMER_DRIVER_UNINITIALIZED == sTimerCtrl[TIMER_ID0].eState)
+    if (TIMER_DRIVER_UNINITIALIZED == sTimerCtrl.eState)
     {
         /* set timer state : timer is initialized */
-        sTimerCtrl[TIMER_ID0].eState = TIMER_DRIVER_INITIALIZED;
+        sTimerCtrl.eState = TIMER_DRIVER_INITIALIZED;
                 
         /* Enable timer0 interrupt */
         INTCON = (GLOBAL_INTERRUPT_ENABLE_MSK |
@@ -151,69 +139,60 @@ static bool bTimer0Init(void)
         TMR0 = (uint8_t)TIMER0_PERIOD;
     }
     
-    return (TIMER_DRIVER_INITIALIZED == sTimerCtrl[TIMER_ID0].eState);
+    return (TIMER_DRIVER_INITIALIZED == sTimerCtrl.eState);
 }
 
 
- /****************************************************************************
- *                                                                           *                                     
- *  P U B L I C  F U N C T I O N  I M P L E M E N T A T I O N                *                                     
- *                                                                           *                                     
- *****************************************************************************/
-
-bool bTimerInit(eTimerID_t eTimerNumber)
-{
-    bool bRet = false;
-    
-    switch(eTimerNumber)
-    {
-       case TIMER_ID0 :
-           bRet = bTimer0Init();
-           break;
-
-       /* todo */
-       case TIMER_ID1:
-       case TIMER_ID2:
-           break;
-
-       /* do nothing */
-       default:
-           break;
-    }
-    
-    return bRet;
-}
-
-
-bool bTimer0InsertCallback(cbkFunc_t Function, uint32_t u32PeriodMs)
+bool bTimerRegCallback(cbkFunc_t Function, uint32_t u32PeriodMs)
 {
     bool bRet = false;
     
     if ((Function != NULLPTR) && 
         (u32PeriodMs != TIMER_ZERO) && 
-        (TIMER_DRIVER_INITIALIZED == sTimerCtrl[TIMER_ID0].eState))
+        (TIMER_DRIVER_INITIALIZED == sTimerCtrl.eState))
     {
         /* Function was registered */
         bRet = true;
         
         /* registration of callback function and it period */
-        sTimerCtrl[TIMER_ID0].Function    = Function;
-        sTimerCtrl[TIMER_ID0].u32PeriodMs = u32PeriodMs;
-        sTimerCtrl[TIMER_ID0].u32NextTime = u32PeriodMs + sTimerCtrl[TIMER_ID0].u32TickMs;
+        sTimerCtrl.Function    = Function;
+        sTimerCtrl.u32PeriodMs = u32PeriodMs;
+        sTimerCtrl.u32NextTime = u32PeriodMs + sTimerCtrl.u32TickMs;
     }
     
     return bRet;
 }
 
 
-void vTimer0DelayMs(uint32_t u32Delay)
+bool bTimerUnregCallback(cbkFunc_t Function, uint32_t u32PeriodMs)
+{
+    bool bRet = false;
+    
+    if ((Function != NULLPTR) && 
+        (u32PeriodMs != TIMER_ZERO) && 
+        (TIMER_DRIVER_INITIALIZED == sTimerCtrl.eState))
+    {
+        /* Function was registered */
+        bRet = true;
+        
+        /* registration of callback function and it period */
+        sTimerCtrl.Function    = NULLPTR;
+        sTimerCtrl.u32PeriodMs = TIMER_ZERO;
+        sTimerCtrl.u32NextTime = TIMER_ZERO;
+    }
+    
+    return bRet;
+}
+
+
+void vTimerDelayMs(uint32_t u32Delay)
 {
     /* Recovery of current time */
-    uint32_t u32CurrentTime = (uint32_t)~(sTimerCtrl[TIMER_ID0].u32TickMs) + TIMER_ONE ;
+    uint32_t u32CurrentTime = (uint32_t)~(sTimerCtrl.u32TickMs) + TIMER_ONE ;
     
     if (u32Delay != TIMER_ZERO)
     {   
-        while(sTimerCtrl[TIMER_ID0].u32TickMs + u32CurrentTime <= u32Delay);
+        while(sTimerCtrl.u32TickMs + u32CurrentTime <= u32Delay);
     }
 }
 
@@ -226,17 +205,17 @@ void __interrupt() vTimer0InterruptHandler(void)
     if (READ_FLAG(INTCON, INTCON_TMR0IF_BIT))
     {     
         /* incrementation of ticks */
-        sTimerCtrl[TIMER_ID0].u32TickMs++;
+        sTimerCtrl.u32TickMs++;
         
-        if ((sTimerCtrl[TIMER_ID0].Function != NULLPTR) && 
-            (sTimerCtrl[TIMER_ID0].u32PeriodMs != TIMER_ZERO) &&
-            (sTimerCtrl[TIMER_ID0].u32TickMs >= sTimerCtrl[TIMER_ID0].u32NextTime))
+        if ((sTimerCtrl.Function != NULLPTR) && 
+            (sTimerCtrl.u32PeriodMs != TIMER_ZERO) &&
+            (sTimerCtrl.u32TickMs >= sTimerCtrl.u32NextTime))
         {
             /* we compute the next period */
-            sTimerCtrl[TIMER_ID0].u32NextTime += sTimerCtrl[TIMER_ID0].u32PeriodMs;
+            sTimerCtrl.u32NextTime += sTimerCtrl.u32PeriodMs;
 
             /* We call the function */
-            sTimerCtrl[TIMER_ID0].Function();
+            (sTimerCtrl.Function)();
         }
             
         /* set timer period */

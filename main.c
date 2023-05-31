@@ -1,6 +1,6 @@
 /*
  * File:   main.c
- * Author: al2nt
+ * Author: VOUFO ASTRI
  *
  * Created on May 26, 2023, 1:49 PM
  */
@@ -34,10 +34,10 @@ void main(void) {
     LED_PIN = CLEAR_PIN;
 
     /* Initialization of timer 0 */
-    bTimerInit(TIMER_ID0);
+    bTimerInit();
 
     /* Registration of callback function */
-    bTimer0InsertCallback(vLedToggle, 500);
+    bTimerRegCallback(vLedToggle, 500);
 
     while(1)
     {
