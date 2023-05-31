@@ -1,6 +1,6 @@
 /*
  * File:   main.c
- * Author: ASTRI VOUFO
+ * Author: VOUFO BOGNING ULRICH ASTRI
  *
  * Created on May 26, 2023, 1:49 PM
  */
