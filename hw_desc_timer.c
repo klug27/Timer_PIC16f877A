@@ -1,17 +1,10 @@
-/*
- * File:   hw_desc_timer0.c
- * Author: VOUFO BOGNING ULRICH ASTRI
- *
- * Created on 26 mai 2023, 14:45
- */
-
 
 #include <stdbool.h>
 #include <xc.h>
 #include "hw_desc_timer.h"
 
 /******************************************************************************
-* @file		hw_desc_timer0.c
+* @file		hw_desc_timer.c
 * @author	VOUFO BOGNING ULRICH ASTRI
 * @date		26.05.2023
 *******************************************************************************/
