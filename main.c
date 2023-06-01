@@ -5,7 +5,7 @@
  * Created on May 26, 2023, 1:49 PM
  */
 
-// Specify the XTAL crystal at 20Mhz
+// Specify the crystal frequency at 20Mhz
 #define _XTAL_FREQ  20000000 
 #include "config.h"
 #include <xc.h>
