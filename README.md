@@ -14,7 +14,7 @@ These library is used for PIC16F877A and provides user to generate accurate dela
 |**bTimerInit**     |**bool bTimerInit(void);**  |This function ist use to initialize timer 0. |***true*** : The timer has been correctly initialized; <BR> ***false*** : The timer is not initialized; |
 |**bTimerRegCallback**   |**bool bTimerRegCallback(cbkFunc_t Function, uint32_t u32PeriodMs);**   |This function ist used to insert callback function in the memory.|***true*** : The function has been correctly registered; otherwise it will returns **false**   |
 |**bTimerUnregCallback**   |**bool bTimerUnregCallback(cbkFunc_t Function, uint32_t u32PeriodMs);**   |This function ist used to release callback function in the memory.|***true*** : The function has been correctly unregistered; otherwise it will returns **false**   |
-|**vTimerDelayMs**   |**vTimerDelayMs(uint32_t u32Delay);**   |This function delay in millisecond .|***nothing***|
+|**vTimerDelayMs**   |**void vTimerDelayMs(uint32_t u32Delay);**   |This function delay in millisecond .|***nothing***|
 
 ## Library Example
 
