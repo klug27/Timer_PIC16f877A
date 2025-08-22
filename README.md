@@ -1,9 +1,3 @@
-Timer 0 Library 
-==================
-These library is used for PIC16F877A and provides user to generate accurate delay using timer 0.
-
-## Library routines
-
 # Timer0 Library
 
 This library is written in **C** for the **PIC16F877A** and is designed to generate accurate delays using **Timer0**. It is compatible with **MPLAB** and relies on **direct register access** for maximum control and performance.
