@@ -4,17 +4,24 @@ These library is used for PIC16F877A and provides user to generate accurate dela
 
 ## Library routines
 
-- bTimerInit
-- bTimerRegCallback
-- bTimerUnregCallback
-- vTimerDelayMs
+# Timer0 Library
 
-|Library routines| Prototypes|Descriptions|Returns|
-|:---            |:---      |:---       |:---  |
-|**bTimerInit**     |**bool bTimerInit(void);**  |This function ist use to initialize timer 0. |***true*** : The timer has been correctly initialized; <BR> ***false*** : The timer is not initialized; |
-|**bTimerRegCallback**   |**bool bTimerRegCallback(cbkFunc_t Function, uint32_t u32PeriodMs);**   |This function ist used to insert callback function in the memory.|***true*** : The function has been correctly registered; otherwise it will returns **false**   |
-|**bTimerUnregCallback**   |**bool bTimerUnregCallback(cbkFunc_t Function, uint32_t u32PeriodMs);**   |This function ist used to release callback function in the memory.|***true*** : The function has been correctly unregistered; otherwise it will returns **false**   |
-|**vTimerDelayMs**   |**void vTimerDelayMs(uint32_t u32Delay);**   |This function delay in millisecond .|***nothing***|
+This library is written in **C** for the **PIC16F877A** and is designed to generate accurate delays using **Timer0**. It is compatible with **MPLAB** and relies on **direct register access** for maximum control and performance.
+
+## Library Routines
+
+- `bTimerInit`
+- `bTimerRegCallback`
+- `bTimerUnregCallback`
+- `vTimerDelayMs`
+
+| Library Routine         | Prototype                                                                 | Description                                                                 | Return Value |
+|------------------------|---------------------------------------------------------------------------|-----------------------------------------------------------------------------|--------------|
+| **bTimerInit**         | `bool bTimerInit(void);`                                                  | Initializes Timer0 and prepares it for use.                                 | `true` if the timer was successfully initialized; <br> `false` otherwise. |
+| **bTimerRegCallback**  | `bool bTimerRegCallback(cbkFunc_t Function, uint32_t u32PeriodMs);`       | Registers a callback function to be triggered periodically by Timer0.       | `true` if the function was successfully registered; <br> `false` otherwise. |
+| **bTimerUnregCallback**| `bool bTimerUnregCallback(cbkFunc_t Function, uint32_t u32PeriodMs);`     | Unregisters a previously registered callback function.                       | `true` if the function was successfully unregistered; <br> `false` otherwise. |
+| **vTimerDelayMs**      | `void vTimerDelayMs(uint32_t u32Delay);`                                  | Generates a blocking delay in milliseconds using Timer0.                    | None |
+
 
 ## Library Example
 
@@ -53,6 +60,7 @@ void main(void) {
     bTimerInit();
 
     /* Registration of callback function */
+    /* Toggle led every 500ms */
     bTimerRegCallback(vLedToggle, 500);
 
     while(1)
